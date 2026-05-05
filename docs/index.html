@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CI Trigger</title>
+  <title>Dynamic CI Trigger</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: #0d1117;
@@ -17,368 +17,346 @@
       justify-content: center;
       padding: 24px;
     }
-
+ 
     .card {
       background: #161b22;
       border: 1px solid #30363d;
       border-radius: 12px;
       padding: 32px;
       width: 100%;
-      max-width: 480px;
+      max-width: 520px;
     }
-
+ 
     .card-header {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 28px;
     }
-
-    .card-header svg { color: #58a6ff; }
-
-    h1 {
-      font-size: 20px;
+ 
+    .card-header svg { flex-shrink: 0; }
+ 
+    .card-header h1 {
+      font-size: 18px;
       font-weight: 600;
       color: #f0f6fc;
+      margin: 0;
     }
-
-    .subtitle {
-      font-size: 13px;
+ 
+    .card-header p {
+      font-size: 12px;
       color: #8b949e;
-      margin-top: 2px;
+      margin: 2px 0 0;
     }
-
-    .field {
-      margin-bottom: 20px;
-    }
-
+ 
+    .field { margin-bottom: 16px; }
+ 
     label {
       display: block;
-      font-size: 13px;
-      font-weight: 500;
+      font-size: 12px;
       color: #8b949e;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      margin-bottom: 6px;
     }
-
-    select, input {
+ 
+    select, input[type="text"], input[type="password"] {
       width: 100%;
       background: #0d1117;
       border: 1px solid #30363d;
       border-radius: 8px;
       color: #e6edf3;
-      padding: 10px 14px;
+      padding: 9px 12px;
       font-size: 14px;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.15s;
       appearance: none;
       -webkit-appearance: none;
+    }
+ 
+    select {
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 12px center;
       padding-right: 36px;
     }
-
-    input {
-      background-image: none;
-      padding-right: 14px;
-    }
-
+ 
     select:focus, input:focus {
       border-color: #58a6ff;
       box-shadow: 0 0 0 3px rgba(88,166,255,0.1);
     }
-
-    .tag-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-
-    .tag {
-      font-size: 11px;
-      padding: 3px 10px;
-      border-radius: 20px;
-      border: 1px solid;
-      font-weight: 500;
-    }
-
-    .tag-blue  { background: rgba(88,166,255,0.1);  border-color: rgba(88,166,255,0.3);  color: #58a6ff; }
-    .tag-green { background: rgba(63,185,80,0.1);   border-color: rgba(63,185,80,0.3);   color: #3fb950; }
-    .tag-purple{ background: rgba(188,140,255,0.1); border-color: rgba(188,140,255,0.3); color: #bc8cff; }
-
-    .info-box {
-      background: #0d1117;
-      border: 1px solid #30363d;
-      border-left: 3px solid #58a6ff;
-      border-radius: 6px;
-      padding: 12px 14px;
-      font-size: 13px;
-      color: #8b949e;
-      margin-bottom: 20px;
-      line-height: 1.6;
-    }
-
-    .info-box strong { color: #e6edf3; }
-
+ 
     .divider {
       border: none;
       border-top: 1px solid #21262d;
-      margin: 24px 0;
+      margin: 20px 0;
     }
-
+ 
+    .info-box {
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: #0d1117;
+      border-radius: 6px;
+      border-left: 3px solid #58a6ff;
+      font-size: 13px;
+      color: #8b949e;
+      line-height: 1.6;
+    }
+ 
+    .info-box strong { color: #e6edf3; }
+ 
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 6px;
+      font-weight: 500;
+    }
+ 
     button {
       width: 100%;
       background: #238636;
       color: #fff;
       border: none;
       border-radius: 8px;
-      padding: 12px;
-      font-size: 15px;
+      padding: 11px;
+      font-size: 14px;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
+      transition: background 0.15s, transform 0.1s;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
+      margin-top: 4px;
     }
-
+ 
     button:hover:not(:disabled) { background: #2ea043; }
     button:active:not(:disabled) { transform: scale(0.98); }
     button:disabled { background: #21262d; color: #8b949e; cursor: not-allowed; }
-
+ 
     .status {
-      margin-top: 16px;
-      padding: 12px 14px;
+      display: none;
+      margin-top: 14px;
+      padding: 10px 12px;
       border-radius: 8px;
       font-size: 13px;
-      display: none;
+      line-height: 1.5;
     }
-
+ 
+    .status a { color: inherit; }
+ 
     .status.success {
+      display: block;
       background: rgba(63,185,80,0.1);
       border: 1px solid rgba(63,185,80,0.3);
       color: #3fb950;
-      display: block;
     }
-
+ 
     .status.error {
+      display: block;
       background: rgba(248,81,73,0.1);
       border: 1px solid rgba(248,81,73,0.3);
       color: #f85149;
-      display: block;
     }
-
+ 
     .status.loading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       background: rgba(88,166,255,0.1);
       border: 1px solid rgba(88,166,255,0.3);
       color: #58a6ff;
-      display: block;
     }
-
+ 
     .spinner {
-      width: 16px; height: 16px;
+      width: 14px; height: 14px;
       border: 2px solid transparent;
       border-top-color: currentColor;
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
-      display: inline-block;
+      flex-shrink: 0;
     }
-
+ 
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 <div class="card">
+ 
   <div class="card-header">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+         stroke="#58a6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="10"/>
       <polyline points="12 6 12 12 16 14"/>
     </svg>
     <div>
       <h1>Dynamic CI Trigger</h1>
-      <div class="subtitle">Select branch → test files update automatically</div>
+      <p>Branch selection updates test files live</p>
     </div>
   </div>
-
-  <!-- OWNER / REPO / TOKEN -->
+ 
   <div class="field">
-    <label>GitHub Owner / Repo</label>
+    <label>GitHub repo (owner/repo)</label>
     <input type="text" id="repo" placeholder="username/repository-name" />
   </div>
-
+ 
   <div class="field">
-    <label>GitHub Token <span style="color:#8b949e;font-size:11px">(needs repo + actions scope)</span></label>
+    <label>GitHub token <span style="font-size:11px;">(needs repo + actions scope)</span></label>
     <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxx" />
   </div>
-
-  <hr class="divider"/>
-
-  <!-- BRANCH -->
+ 
+  <hr class="divider" />
+ 
   <div class="field">
     <label>Branch</label>
-    <select id="branch" onchange="onBranchChange()">
+    <select id="branch">
       <option value="main">main</option>
       <option value="dev">dev</option>
       <option value="feature/test">feature/test</option>
     </select>
-    <div class="tag-row" id="branch-tags"></div>
+    <div class="info-box" id="branch-info"></div>
   </div>
-
-  <!-- PROGRAM FILE -->
+ 
   <div class="field">
-    <label>Program File</label>
+    <label>Program file</label>
     <select id="program_file">
       <option value="app.py">app.py</option>
     </select>
   </div>
-
-  <!-- TEST FILE -->
+ 
   <div class="field">
-    <label>Test File</label>
+    <label>
+      Test file
+      <span class="badge" id="default-badge"></span>
+    </label>
     <select id="test_file"></select>
-    <div class="tag-row" id="test-tags"></div>
   </div>
-
-  <!-- INFO BOX -->
-  <div class="info-box" id="info-box"></div>
-
-  <button id="run-btn" onclick="triggerWorkflow()">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+ 
+  <button id="run-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
          stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <polygon points="5 3 19 12 5 21 5 3"/>
     </svg>
     Run Workflow
   </button>
-
+ 
   <div class="status" id="status"></div>
+ 
 </div>
-
+ 
 <script>
-  // ── Branch config ──────────────────────────────────────────────
-  const BRANCH_CONFIG = {
+  const CONFIG = {
     main: {
-      tests:   ["test_app.py", "test_math.py"],
+      tests:   ["test_math.py", "test_app.py"],
       default: "test_math.py",
-      label:   "main",
-      tagClass:"tag-blue",
-      description: "Production branch. Runs <strong>test_math.py</strong> by default (positive, negative & zero cases)."
+      color:   "#58a6ff",
+      desc:    "Default test: <strong>test_math.py</strong> — positive, negative &amp; zero cases."
     },
     dev: {
-      tests:   ["test_app.py", "test_large.py"],
+      tests:   ["test_large.py", "test_app.py"],
       default: "test_large.py",
-      label:   "dev",
-      tagClass:"tag-green",
-      description: "Development branch. Runs <strong>test_large.py</strong> by default (large number stress tests)."
+      color:   "#3fb950",
+      desc:    "Default test: <strong>test_large.py</strong> — large number stress tests."
     },
     "feature/test": {
-      tests:   ["test_app.py", "test_decimal.py"],
+      tests:   ["test_decimal.py", "test_app.py"],
       default: "test_decimal.py",
-      label:   "feature/test",
-      tagClass:"tag-purple",
-      description: "Feature branch. Runs <strong>test_decimal.py</strong> by default (decimal precision tests)."
+      color:   "#bc8cff",
+      desc:    "Default test: <strong>test_decimal.py</strong> — decimal precision tests."
     }
   };
-
-  // ── Init ──────────────────────────────────────────────────────
-  window.onload = () => onBranchChange();
-
-  function onBranchChange() {
-    const branch = document.getElementById("branch").value;
-    const cfg    = BRANCH_CONFIG[branch];
-
-    // Rebuild test file dropdown
-    const sel = document.getElementById("test_file");
+ 
+  function updateUI() {
+    var branch = document.getElementById("branch").value;
+    var cfg    = CONFIG[branch];
+ 
+    var sel = document.getElementById("test_file");
     sel.innerHTML = "";
-    cfg.tests.forEach(t => {
-      const opt = document.createElement("option");
+    cfg.tests.forEach(function(t) {
+      var opt = document.createElement("option");
       opt.value = t;
-      opt.textContent = t;
+      opt.textContent = t + (t === cfg.default ? "  (default)" : "");
       if (t === cfg.default) opt.selected = true;
       sel.appendChild(opt);
     });
-
-    // Branch tag
-    document.getElementById("branch-tags").innerHTML =
-      `<span class="tag ${cfg.tagClass}">${cfg.label}</span>`;
-
-    // Test tags
-    document.getElementById("test-tags").innerHTML = cfg.tests
-      .map(t => `<span class="tag ${t === cfg.default ? cfg.tagClass : 'tag-blue'}">${t}${t === cfg.default ? " ✦ default" : ""}</span>`)
-      .join("");
-
-    // Info box
-    document.getElementById("info-box").innerHTML = cfg.description;
-
+ 
+    var info = document.getElementById("branch-info");
+    info.style.borderLeftColor = cfg.color;
+    info.innerHTML = cfg.desc;
+ 
+    var badge = document.getElementById("default-badge");
+    badge.textContent = "auto-selected for branch";
+    badge.style.background = cfg.color + "22";
+    badge.style.color = cfg.color;
+ 
     clearStatus();
   }
-
-  // ── Trigger workflow ──────────────────────────────────────────
-  async function triggerWorkflow() {
-    const repo   = document.getElementById("repo").value.trim();
-    const token  = document.getElementById("token").value.trim();
-    const branch = document.getElementById("branch").value;
-    const prog   = document.getElementById("program_file").value;
-    const test   = document.getElementById("test_file").value;
-
+ 
+  document.getElementById("branch").addEventListener("change", updateUI);
+ 
+  document.getElementById("run-btn").addEventListener("click", async function() {
+    var repo   = document.getElementById("repo").value.trim();
+    var token  = document.getElementById("token").value.trim();
+    var branch = document.getElementById("branch").value;
+    var prog   = document.getElementById("program_file").value;
+    var test   = document.getElementById("test_file").value;
+ 
     if (!repo || !token) {
-      showStatus("error", "⚠️ Please enter your GitHub repo and token.");
+      showStatus("error", "Please enter your GitHub repo and token.");
       return;
     }
-
-    const btn = document.getElementById("run-btn");
-    btn.disabled = true;
-    showStatus("loading", '<span class="spinner"></span> &nbsp;Triggering workflow…');
-
+ 
+    this.disabled = true;
+    showStatus("loading", "Triggering workflow...");
+ 
     try {
-      const res = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/ci.yml/dispatches`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Accept": "application/vnd.github+json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          ref: branch,
-          inputs: {
-            branch:       branch,
-            program_file: prog,
-            test_file:    test
-          }
-        })
-      });
-
+      var res = await fetch(
+        "https://api.github.com/repos/" + repo + "/actions/workflows/ci.yml/dispatches",
+        {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + token,
+            "Accept": "application/vnd.github+json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            ref: branch,
+            inputs: { branch: branch, program_file: prog, test_file: test }
+          })
+        }
+      );
+ 
       if (res.status === 204) {
         showStatus("success",
-          `✅ Workflow triggered on <strong>${branch}</strong> with <strong>${test}</strong>. ` +
-          `<a href="https://github.com/${repo}/actions" target="_blank" ` +
-          `style="color:inherit;text-decoration:underline">View on GitHub →</a>`);
+          "Workflow triggered on <strong>" + branch + "</strong> with <strong>" + test + "</strong>. " +
+          "<a href='https://github.com/" + repo + "/actions' target='_blank' style='text-decoration:underline;'>View on GitHub &rarr;</a>"
+        );
       } else {
-        const err = await res.json().catch(() => ({}));
-        showStatus("error", `❌ Error ${res.status}: ${err.message || "Unknown error"}`);
+        var err = await res.json().catch(function() { return {}; });
+        showStatus("error", "Error " + res.status + ": " + (err.message || "Unknown error"));
       }
-    } catch (e) {
-      showStatus("error", `❌ Network error: ${e.message}`);
-    } finally {
-      btn.disabled = false;
+    } catch(e) {
+      showStatus("error", "Network error: " + e.message);
     }
-  }
-
+ 
+    this.disabled = false;
+  });
+ 
   function showStatus(type, msg) {
-    const s = document.getElementById("status");
-    s.className = `status ${type}`;
-    s.innerHTML = msg;
+    var s = document.getElementById("status");
+    s.className = "status " + type;
+    s.innerHTML = type === "loading"
+      ? "<div class='spinner'></div>" + msg
+      : msg;
   }
-
+ 
   function clearStatus() {
-    const s = document.getElementById("status");
+    var s = document.getElementById("status");
     s.className = "status";
     s.innerHTML = "";
   }
+ 
+  updateUI();
 </script>
 </body>
 </html>
