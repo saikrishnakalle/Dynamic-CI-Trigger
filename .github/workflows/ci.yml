@@ -1,0 +1,65 @@
+name: Dynamic CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch"
+        type: choice
+        options:
+          - main
+          - dev
+          - feature/test
+        default: main
+
+      program_file:
+        description: "Program File"
+        type: choice
+        options:
+          - app.py
+        default: app.py
+
+      test_file:
+        description: "Test File"
+        type: choice
+        options:
+          - test_app.py
+          - test_math.py
+          - test_large.py
+          - test_decimal.py
+        default: test_app.py
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout selected branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install pytest
+
+      - name: Run program file
+        run: python ${{ github.event.inputs.program_file }}
+
+      - name: Check test file exists
+        run: |
+          if [ ! -f "${{ github.event.inputs.test_file }}" ]; then
+            echo "❌ ${{ github.event.inputs.test_file }} not found in branch ${{ github.event.inputs.branch }}"
+            ls test_*.py
+            exit 1
+          fi
+
+      - name: Run test_app.py (baseline)
+        run: pytest test_app.py -v
+
+      - name: Run selected test file
+        run: pytest ${{ github.event.inputs.test_file }} -v
