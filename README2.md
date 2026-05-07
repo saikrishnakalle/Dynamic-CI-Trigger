@@ -1,7 +1,7 @@
 # 🚀 Dynamic CI Dashboard
 
 ## Quick Access
-- [Open CI Dashboard]()
+- [Open CI Dashboard](https://saikrishnakalle.github.io/program2/)
 - [View Actions](../../actions)
 
 ## Features
