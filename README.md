@@ -1,3 +1,3 @@
 # Dynamic CI Dashboard
 
-[Open Dashboard](https://username.github.io/repository-name/)
+[Open Dashboard](https://saikrishnakalle.github.io/program2/)
