@@ -36,27 +36,6 @@ We built a custom HTML dashboard where:
 
 No need to dig through GitHub Actions logs manually, and no risk of running the wrong test file against the wrong branch.
 
----
-
-## 🏗️ Architecture
-
-```
-HTML Dashboard (GitHub Pages)
-        ↓
-  Branch selected → defaults shown instantly (client-side, before run)
-        ↓
-  GitHub REST API (workflow_dispatch)
-        ↓
-  Single ci.yml workflow (lives only on "main")
-        ↓
-  Workflow checks out the SELECTED branch's code
-        ↓
-  Detects branch → assigns correct code/test file
-        ↓
-  Runs program + pytest
-        ↓
-  Dashboard polls GitHub API → shows live step status + final result
-```
 
 ---
 
@@ -71,27 +50,6 @@ HTML Dashboard (GitHub Pages)
 | **Python + pytest** | The actual code and tests being run inside the CI pipeline |
 | **Personal Access Token (PAT)** | Authenticates API requests from the dashboard to GitHub |
 
----
-
-## 📂 Project Structure
-
-```
-main branch:
-├── .github/workflows/ci.yml      ← the ONE and ONLY workflow file
-
-hello-world branch:
-├── hello.py
-├── test_hello.py
-
-math-app branch:
-├── math_app.py
-├── test_math.py
-
-gh-pages branch (or docs/ folder):
-├── index.html                    ← the dashboard
-```
-
-> Important: the workflow file exists **only on `main`**. It is never duplicated across branches. It dynamically checks out whichever branch is selected and figures out the right files to run.
 
 ---
 
